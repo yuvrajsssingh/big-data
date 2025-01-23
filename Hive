@@ -1,0 +1,23 @@
+(1).What is HIVE
+Hive is a data warehouse system which is used to analyze structured data. It is built on the top of Hadoop. It was developed by Facebook.
+Hive provides the functionality of reading, writing, and managing large datasets residing in distributed storage. It runs SQL like queries called HQL (Hive query language) which gets internally converted to MapReduce jobs.
+Using Hive, we can skip the requirement of the traditional approach of writing complex MapReduce programs. Hive supports Data Definition Language (DDL), Data Manipulation Language (DML), and User Defined Functions (UDF  ).
+
+(2).Features of Hive
+Hive is fast and scalable.
+It provides SQL-like queries (i.e., HQL) that are implicitly transformed to MapReduce or Spark jobs.
+It is capable of analyzing large datasets stored in HDFS.
+It allows different storage types such as plain text, RCFile, and HBase.
+It uses indexing to accelerate queries.
+It can operate on compressed data stored in the Hadoop ecosystem.
+It supports user-defined functions (UDFs) where user can provide its functionality.
+
+(3).Limitations of Hive
+Hive is not capable of handling real-time data.
+It is not designed for online transaction processing.
+Hive queries contain high latency.
+
+(4).Hive - Create Database
+In Hive, the database is considered as a catalog or namespace of tables. So, we can maintain multiple tables within a database where a unique name is assigned to each table. Hive also provides a default database with a name default.
+Initially, we check the default database provided by Hive. So, to check the list of existing databases, follow the below command: -  
+hive> show databases;  
