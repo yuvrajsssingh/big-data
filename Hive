@@ -21,3 +21,105 @@ Hive queries contain high latency.
 In Hive, the database is considered as a catalog or namespace of tables. So, we can maintain multiple tables within a database where a unique name is assigned to each table. Hive also provides a default database with a name default.
 Initially, we check the default database provided by Hive. So, to check the list of existing databases, follow the below command: -  
 hive> show databases;  
+
+(5).Drop Database
+Drop Database is a statement that drops all the tables and deletes the database. Its syntax is as follows:
+The following queries are used to drop a database. Let us assume that the database name is userdb.
+hive> DROP DATABASE IF EXISTS userdb;
+
+(6).Create Table
+Create Table is a statement used to create a table in Hive. The syntax and example are as follows:
+The following query creates a table named employee using the above data.
+hive> CREATE TABLE IF NOT EXISTS employee ( eid int, name String,
+salary String, destination String)
+COMMENT ‘Employee details’
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ‘\t’
+LINES TERMINATED BY ‘\n’
+STORED AS TEXTFILE;
+
+(7).Alter Table
+It is used to alter a table in Hive.
+The statement takes any of the following syntaxes based on what attributes we wish to modify in a table.
+ALTER TABLE name RENAME TO new_name
+ALTER TABLE name ADD COLUMNS (col_spec[, col_spec ...])
+ALTER TABLE name DROP [COLUMN] column_name
+ALTER TABLE name CHANGE column_name new_name new_type
+ALTER TABLE name REPLACE COLUMNS (col_spec[, col_spec ...])
+
+(8).Drop Table
+The syntax is as follows:
+The following query drops a table named employee:
+hive> DROP TABLE IF EXISTS employee;
+
+(9).Hive organizes tables into partitions. 
+It is a way of dividing a table into related parts based on the values of partitioned columns such as date, city, and department.
+Using partition, it is easy to query a portion of the data.
+As we know that Hadoop is used to handle the huge amount of data, it is always required to use the best approach to deal with it. The partitioning in Hive is the best example of it.
+The partitioning in Hive can be executed in two ways -
+Static partitioning
+Dynamic partitioning
+
+Static Partitioning
+In static or manual partitioning, it is required to pass the values of partitioned columns manually while loading the data into the table. Hence, 
+the data file doesn't contain the partitioned columns.
+
+Create the table and provide the partitioned columns by using the following command: -
+hive> create table student (id int, name string, age int,  institute string)   
+partitioned by (course string)  
+row format delimited  
+fields terminated by ',';  
+
+Dynamic Partitioning
+In dynamic partitioning, the values of partitioned columns exist within the table. So, it is not required to pass the values of partitioned columns manually.
+Enable the dynamic partition by using the following commands: -
+hive> set hive.exec.dynamic.partition=true;    
+hive> set hive.exec.dynamic.partition.mode=nonstrict;  
+
+Create a dummy table to store the data.
+hive> create table stud_demo(id int, name string, age int, institute string, course string)   
+row format delimited  
+fields terminated by ',';  
+
+Now, load the data into the table.
+hive> load data local inpath '/home/codegyani/hive/student_details' into table stud_demo;  
+
+Create a partition table by using the following command: -
+hive> create table student_part (id int, name string, age int, institute string)   
+partitioned by (course string)  
+row format delimited  
+fields terminated by ',';  
+
+Now, insert the data of dummy table into the partition table.
+hive> insert into student_part  
+partition(course)  
+select id, name, age, institute, course  
+from stud_demo;  
+
+(10).Bucketing in Hive
+The bucketing in Hive is a data organizing technique.
+It is similar to partitioning in Hive with an added functionality that it divides large datasets into more manageable parts known as buckets. 
+So, we can use bucketing in Hive when the implementation of partitioning becomes difficult.
+However, we can also divide partitions further in buckets.
+Create a dummy table to store the data.
+hive> create table emp_demo (Id int, Name string , Salary float)    
+row format delimited    
+fields terminated by ',' ;   
+
+Now, load the data into the table.
+hive> load data local inpath '/home/codegyani/hive/emp_details' into table emp_demo;
+
+Enable the bucketing by using the following command: -
+hive> set hive.enforce.bucketing = true;  
+
+Create a bucketing table by using the following command: -
+hive> create table emp_bucket(Id int, Name string , Salary float)    
+clustered by (Id) into 3 buckets  
+row format delimited    
+fields terminated by ',' ;    
+
+Now, insert the data of dummy table into the bucketed table.
+hive> insert overwrite table emp_bucket select * from emp_demo;    
+
+
+
