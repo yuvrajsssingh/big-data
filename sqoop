@@ -1,0 +1,51 @@
+(1).What is Sqoop
+Sqoop is a command-line interface application for transferring data between relational databases and Hadoop.
+
+It supports incremental loads of a single table or a free form SQL query as well as saved jobs which can be run multiple times to import updates made to a database since the last import.
+Using Sqoop, Data can be moved into HDFS/hive/hbase from MySQL/ PostgreSQL/Oracle/SQL Server/DB2 and vise versa.
+
+(2)Sqoop Working
+Step 1: Sqoop send the request to Relational DB to send the return the metadata informationabout the table(Metadata here is the data about the table in relational DB).
+
+Step 2: From the received information it will generate the java classes (Reason why you shouldhave Java configured before get it working-Sqoop internally uses JDBC API to generate data).
+
+(3).Starting Sqoop
+Sqoop asks for metadata information from Relation DB.
+Relational DB returns the required request.
+Based on metadata information Sqoop generates java classes.
+Based on primary id partitioning happens in table as multiple mappers will importing data as the same time.
+
+(4).Sqoop Import
+We have tables in mySql database and we have to import it to HDFS using Sqoop.
+To see the content in a table type the below command in mySql prompt.
+
+Importing "countries" table into our HDFS environment:
+
+$ sqoop import --connect "jdbc:mysql://localhost/training" --username cloudera -P --table   
+cloudera -target-dir /user/country_imported  
+
+(5).Sqoop Where
+You can place restrictions on data imported by using "where" clause. Let's import cityByCountry table where state ( 6th column is restricted to "Alaska").
+
+The Sqoop statement is written below
+
+sqoop import \ --connect "jdbc:mysql://localhost/training" \ --username training -P \ --table cityByCountry \ --target-dir /user/where_clause \ --where "state = 'Alaska'" \ -m 1
+
+(6).Sqoop Export
+In previous cases, flow of data was from RDBMs to HDFS. Using "export" tool, we can import data from HDFS to RDBMs. Before performing export, Sqoop fetches table metadata from MySQL database. Thus we first need to create a table with required metadata.
+
+Table creation in MySQL
+
+mysql>Create table table_name( column_name column_type )  
+Export query is shown below:
+
+Sqoop query sqoop export \ --connect jdbc:mysql://localhost/cloudera\ --username cloudera -P \ --table exported \ --export-dir /user/country_imported/part-m-00000  
+
+(7).Sqoop Integration with Hadoop Ecosystem
+Till now data was moved between RDBMS to HDFS. This imported data may further be required code analysed using hive or hbase.
+
+Sqoop offers property to directly import data to Hive / Hbase.
+
+Just add "--import-hive" at the end of the command.
+
+Example:sqoop import \ --connect "jdbc:mysql://localhost/training" \ --username training -P \ --table cityByCountry \ --target-dir /user/where_clause \ --where "state = 'Alaska'" \--import -hive  -m 1  
