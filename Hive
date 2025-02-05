@@ -121,5 +121,64 @@ fields terminated by ',' ;
 Now, insert the data of dummy table into the bucketed table.
 hive> insert overwrite table emp_bucket select * from emp_demo;    
 
+(11).Hive - View and Indexes
+This chapter describes how to create and manage views.
+Views are generated based on user requirements.
+You can save any result set data as a view. 
+The usage of view in Hive is same as that of the view in SQL.
+It is a standard RDBMS concept. We can execute all DML operations on a view.
+
+Creating a View
+You can create a view at the time of executing a SELECT statement. The syntax is as follows:
+
+CREATE VIEW [IF NOT EXISTS] view_name [(column_name [COMMENT column_comment], ...) ]
+[COMMENT table_comment]
+AS SELECT ...
+
+Example
+Let us take an example for view. Assume employee table as given below,
+with the fields Id, Name, Salary, Designation, and Dept.
+Generate a query to retrieve the employee details who earn a salary of more than Rs 30000. We store the result in a view named emp_30000.
+
+The following query retrieves the employee details using the above scenario:
+
+hive> CREATE VIEW emp_30000 AS
+SELECT * FROM employee
+WHERE salary>30000;
+
+Creating an Index
+An Index is nothing but a pointer on a particular column of a table.
+Creating an index means creating a pointer on a particular column of a table. Its syntax is as follows:
+CREATE INDEX index_name
+ON TABLE base_table_name (col_name, ...)
+AS 'index.handler.class.name'
+[WITH DEFERRED REBUILD]
+[IDXPROPERTIES (property_name=property_value, ...)]
+[IN TABLE index_table_name]
+[PARTITIONED BY (col_name, ...)]
+[
+   [ ROW FORMAT ...] STORED AS ...
+   | STORED BY ...
+]
+[LOCATION hdfs_path]
+[TBLPROPERTIES (...)]
+
+Example
+Let us take an example for index. Use the same employee table that we have used earlier with the fields Id, Name, Salary, Designation, and Dept. 
+Create an index named index_salary on the salary column of the employee table.
+
+The following query creates an index:
+
+hive> CREATE INDEX inedx_salary ON TABLE employee(salary)
+AS 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler';
+
+(12).HiveQL - ORDER BY and SORT BY Clause
+HiveQL - ORDER BY Clause
+In HiveQL, ORDER BY clause performs a complete ordering of the query result set. Hence, the complete data is passed through a single reducer.
+This may take much time in the execution of large datasets. However, we can use LIMIT to minimize the sorting time.
+HiveQL - SORT BY Clause
+The HiveQL SORT BY clause is an alternative of ORDER BY clause. It orders the data within each reducer. Hence, it performs the local ordering, where each reducer's output is sorted separately.
+It may also give a partially ordered result.
+
 
 
